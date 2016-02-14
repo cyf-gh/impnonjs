@@ -10,6 +10,9 @@
 namespace stInput {
 
 class stInputDev {
+
+	st_class_no_bin_cpy( stInputDev )
+
 private:
 	IDirectInput8 *			m_pdevice; 
 
@@ -20,6 +23,10 @@ public:
 };
 
 class stInputJS {
+
+	st_class_no_bin_cpy( stInputJS )
+
+
 private:
 	IDirectInputDevice8 *	m_pJS;
 	DIJOYSTATE				m_state;

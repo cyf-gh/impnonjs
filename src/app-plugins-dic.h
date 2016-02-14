@@ -1,0 +1,30 @@
+#ifndef __IMPJS_APPPLUGINSDIC_H__ 
+#define __IMPJS_APPPLUGINSDIC_H__
+
+/* MSVC */
+#define ST_PLUGIN_FUNC_BTN0 "?Evt_Btn0@@YAXXZ"
+#define ST_PLUGIN_FUNC_BTN1 "?Evt_Btn1@@YAXXZ"
+#define ST_PLUGIN_FUNC_BTN2 "?Evt_Btn2@@YAXXZ"
+#define ST_PLUGIN_FUNC_BTN3 "?Evt_Btn3@@YAXXZ"
+#define ST_PLUGIN_FUNC_BTN4 "?Evt_Btn4@@YAXXZ"
+#define ST_PLUGIN_FUNC_BTN5 "?Evt_Btn5@@YAXXZ"
+#define ST_PLUGIN_FUNC_BTN6 "?Evt_Btn6@@YAXXZ"
+#define ST_PLUGIN_FUNC_BTN7 "?Evt_Btn7@@YAXXZ"
+
+#define ST_PLUGIN_FUNC_POV0 "?Evt_Pov0@@YAXXZ"
+#define ST_PLUGIN_FUNC_POV1 "?Evt_Pov1@@YAXXZ"
+#define ST_PLUGIN_FUNC_POV2 "?Evt_Pov2@@YAXXZ"
+#define ST_PLUGIN_FUNC_POV3 "?Evt_Pov3@@YAXXZ"
+
+#define ST_PLUGIN_FUNC_WINDOWFOUND "?Evt_WindowFound@@YAXPAX@Z"
+#define ST_PLUGIN_FUNC_WINDOWLOST  "?Evt_WindowLost@@YAXPAX@Z"
+
+#define ST_PLUGIN_FUNC_LEFT	 "?Evt_StickLeft@@YAXKKK@Z"
+#define ST_PLUGIN_FUNC_RIGHT "?Evt_StickRight@@YAXKKK@Z"
+
+#define ST_PLUGIN_FUNC_TITLENAME "?Titlename@@YAXPAPA_W@Z"
+#define ST_PLUGIN_FUNC_CLASSNAME "?Classname@@YAXPAPA_W@Z"
+
+#define ST_PLUGIN_FUNC_FEEDINSTANCE "?FeedInstance@@YAXPAX@Z"
+#define ST_PLUGIN_FUNC_BEHAVIOR		"?Behavior@@YAXAAK@Z"
+#endif /* !__IMPJS_APPPLUGINSDIC_H__ */

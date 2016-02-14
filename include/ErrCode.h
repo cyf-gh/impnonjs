@@ -1,7 +1,7 @@
 #ifndef __IMPJS_ERRCODE_H__
 #define __IMPJS_ERRCODE_H__
 
-namespace stImpJSErrCode {
+namespace stInputErrCode {
 
 enum INPUTDEVICE {
 	ST_ERR_CREATEINPUT		= -600
