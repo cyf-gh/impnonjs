@@ -2,8 +2,9 @@
 
 int main() {
 	printf( "impnonjsx86 Alpha 1\n\n" );
-
-	stAppPlugins app;
-	app.Loop();
+	stImpNonJS	*m_pjs;
+	m_pjs = CreateImpNonJS();
+	stAppPlugins app( m_pjs );
+	m_pjs->Proc();
 	return 0;
 }

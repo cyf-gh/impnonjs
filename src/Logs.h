@@ -38,4 +38,13 @@ static bool isErrored = false;
 #define ST_INJS_LOGERR_LOSTWINDOW \
 	L"\n[ERR]		Current Game Window Lost\n"
 
+#define ST_INJS_LOGOK_INTERFACECREATE \
+	L"[OK]		DirectInput Interface Created.\n"
+
+#define ST_INJS_LOGOK_DEVICECREATE \
+	L"[OK]		DirectInput Device Created.\n"
+
+#define ST_INJS_LOGOK_DEVICENUMANDGUID \
+	L"[OK]		Total [%d] Joystick(s).\n"
+
 #endif /* !__IMPJS_LOGS_H__ */

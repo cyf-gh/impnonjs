@@ -1,4 +1,6 @@
+#include <vector>
 #include <core\Core.h>
+#include <XInput.h>
 using namespace stLibCore;
 
 #include "..\include\Enum.h"
@@ -11,10 +13,13 @@ using namespace stInput;
 
 #include "Logs.h"
 
+std::vector<DIDEVICEINSTANCEW> g_ins;
+
 stInputDev::stInputDev( HINSTANCE handle ) : m_pdevice( NULL ) {
 	if ( FAILED( DirectInput8Create( handle, DIRECTINPUT_HEADER_VERSION, IID_IDirectInput8, ( void ** ) &m_pdevice, NULL) ) ) {  
 		st_core_return( ST_ERR_CREATEINPUT );
 	}
+	wprintf( ST_INJS_LOGOK_INTERFACECREATE );
 }
 
 stInputDev::~stInputDev() {
@@ -25,10 +30,10 @@ const DIJOYSTATE &stInputJS::State() {
 	un32 err;
 
 	while ( true ) {
-		m_pJS->Poll();
-		m_pJS->Acquire();
-		if( SUCCEEDED( err = m_pJS->GetDeviceState( sizeof( m_state ), &m_state ) ) ) { 
-			break;  
+		m_pdevice->Poll();
+		m_pdevice->Acquire();
+		if( SUCCEEDED( err = m_pdevice->GetDeviceState( sizeof( DIJOYSTATE ), &m_state ) ) ) { 
+			st_core_return_with_var( ST_NOERR, m_state );		  
 		}
 		switch ( err ) {
 		case DIERR_NOTINITIALIZED : {
@@ -47,37 +52,49 @@ const DIJOYSTATE &stInputJS::State() {
 		}
 		}
 	}
-	ST_LOGONCE( ST_INJS_LOGOK_GETSTATE, false );
+	 ST_LOGONCE( ST_INJS_LOGOK_GETSTATE, false );
 	st_core_return_with_var( ST_NOERR, m_state );
 }
 
-stInputJS::stInputJS( HWND handle, IDirectInput8 *pdevice, const un32 coopLevel ) : m_pJS( NULL ) {
+
+BOOL FAR PASCAL DIEnumDevicesCallback( LPCDIDEVICEINSTANCEW lpddi, LPVOID pvRef ) {
+	g_ins.push_back( *lpddi );
+	return DIENUM_CONTINUE;
+}
+
+stInputJS::stInputJS( HWND handle, un32 index, IDirectInput8 *pdevice, const un32 coopLevel ) : m_pdevice( NULL ) {
 	un32 coopFlag = 0;
 
 	st_zero_memory( &m_state, sizeof( m_state ) );
 
-	if ( FAILED( pdevice->CreateDevice( GUID_Joystick, &m_pJS, NULL ) ) ) {
+	pdevice->EnumDevices( DI8DEVCLASS_GAMECTRL, DIEnumDevicesCallback, NULL, 0 );
+	wprintf( ST_INJS_LOGOK_DEVICENUMANDGUID, g_ins.size() );
+	if ( FAILED( pdevice->CreateDevice( g_ins[index].guidInstance, &m_pdevice, NULL ) ) ) {
 		st_core_return( ST_ERR_CREATEJS );
 	}  
-	m_pJS->SetDataFormat( &c_dfDIJoystick );
-	
+	wprintf( ST_INJS_LOGOK_DEVICECREATE );
+
+	if ( FAILED( m_pdevice->SetDataFormat( &c_dfDIJoystick ) ) ) {
+		st_core_return( ST_ERR_SETDATAFORMAT );		
+	}
+
 	switch ( coopLevel ) {
 	case ST_DEVICE_OWN : {
-	    coopFlag =  DISCL_BACKGROUND | DISCL_NONEXCLUSIVE;  
+	    coopFlag = DISCL_FOREGROUND | DISCL_EXCLUSIVE;  
 		break;
 	}
 	case ST_DEVICE_SHARE: {
-		coopFlag =  DISCL_FOREGROUND | DISCL_EXCLUSIVE;
+		coopFlag = DISCL_BACKGROUND | DISCL_NONEXCLUSIVE;
 		break;
 	}
 	}
 	
-	if ( FAILED( m_pJS->SetCooperativeLevel( handle, coopFlag ) ) ) {
+	if ( FAILED( m_pdevice->SetCooperativeLevel( handle, coopFlag ) ) ) {
 		st_core_return( ST_ERR_SETCOOP );
 	}  
 }
 
 stInputJS::~stInputJS() {
-	m_pJS->Unacquire();  
-	st_safe_rel( m_pJS );
+	m_pdevice->Unacquire();  
+	st_safe_rel( m_pdevice );
 }

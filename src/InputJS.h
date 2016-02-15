@@ -28,12 +28,13 @@ class stInputJS {
 
 
 private:
-	IDirectInputDevice8 *	m_pJS;
-	DIJOYSTATE				m_state;
+	IDirectInputDevice8 *	m_pdevice;
+	std::vector<DIDEVICEINSTANCEW> m_instances;
+	DIJOYSTATE				m_state;	
 
 public: 
 	const DIJOYSTATE &		State();
-							stInputJS( HWND handle, IDirectInput8 *pdevice, const un32 coopLevel );
+							stInputJS( HWND handle, un32 index, IDirectInput8 *pdevice, const un32 coopLevel );
 							~stInputJS();
 };
 

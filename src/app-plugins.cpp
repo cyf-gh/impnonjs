@@ -1,19 +1,15 @@
 #include <core\Core.h>
 #include <utils\Dir.h>
 #include <utils\Converter.h>
-#pragma comment( lib, "stLibx86.lib" )
 using namespace stLibCore;
 using namespace stLibUtils;
 
 #include <impnonjs.h>
-#pragma comment( lib, "INJSx86.lib" )
 
 #include "app-plugins.h"
 #include "app-plugins-dic.h"
 #include "app-events.h"
 #include "app-logs.h"
-
-#define ST_NO_WINDOW_FOUND -1
 
 #define ST_LOAD_EVT( ptr_type, ptr_member, func_symbol ) \
 	pack.ptr_member = ( ST_EVENT( ptr_type ) )GetProcAddress( m_dllHs[i], func_symbol ); \
@@ -25,13 +21,19 @@ using namespace stLibUtils;
 	}
 
 void stAppPlugins::loadPlugins() {
+	un32 totalSuccess = 0;
+
+	if ( m_dllHs.size() == 0 ) {
+		printf( "\n------No plugin"  );	
+	}
+
 	for ( un32 i = 0; i < m_dllHs.size(); ++i ) {
 		stEventPack pack;
 		bool oneFails = false;
 		wchar_t *className = NULL;
 		wchar_t *titleName = NULL;
-
-		// bad code, isn't it?
+		
+		/* bad code, isn't it? */
 		printf( "\n------Loading DLL[ %d ] Functions...\n", i );
 		ST_LOAD_EVT( EventPassInstance, p_PassInstance, ST_PLUGIN_FUNC_FEEDINSTANCE );
 		ST_CALL_EVENT( pack.p_PassInstance, ( ( void * )m_pjs ) );
@@ -69,47 +71,18 @@ void stAppPlugins::loadPlugins() {
 		}
 		// push window info by DLL INDEX that is the find window order is same as PACK.
 		if ( className != NULL && titleName != NULL ) {
+			++totalSuccess;
 			m_pjs->AppTargetWindow( className, titleName );
-			m_packs.push_back( pack );
+			m_pjs->AppEventPack( pack );
 		}
 	}
-	printf( "------DLL Function Loading Finished\nSUCCEED:[ %d ]\nFAILED[ %d ]\n\n", m_packs.size(), ( m_dllHs.size() - m_packs.size() ) );
+	printf( "------DLL Function Loading Finished\nSUCCEED:[ %d ]\nFAILED[ %d ]\n\n", totalSuccess, ( m_dllHs.size() - totalSuccess ) );
 }
 
-un32 stAppPlugins::Loop() {
-	n32 windowIndex = ST_NO_WINDOW_FOUND;
-
-	while ( true ) {
-		m_pjs->Proc( windowIndex );
-		if ( windowIndex != ST_NO_WINDOW_FOUND ) {
-			// set all events
-			for ( un32 i = 0; i < 8; i++) {
-				m_pjs->SetEvents_Button( i, m_packs[windowIndex].pBTN[i] ); 
-			}
-			for ( un32 i = 0; i < 4; i++) {
-				m_pjs->SetEvents_Pov( i, m_packs[windowIndex].pPOV[i] ); 
-			}
-			for ( un32 i = 0; i < ST_MAX_STATE; ++i ) {
-				m_pjs->SetEvents_State( (STATE)i, m_packs[windowIndex].pSTATE[i] ); 
-			}
-			m_pjs->SetEvents_Stick( true, m_packs[windowIndex].pLEFT );
-			m_pjs->SetEvents_Stick( false, m_packs[windowIndex].pRIGHT );
-			
-			un32 behavior = 0;
-			ST_CALL_EVENT( m_packs[windowIndex].p_Behavior, ( behavior ) );
-
-			m_pjs->SetBehavior( ( stInputEnum::BEHAVIOR )behavior );
-
-			windowIndex = ST_NO_WINDOW_FOUND;
-		}
-	}
-}
-
-stAppPlugins::stAppPlugins() : m_pjs( NULL ) {
+stAppPlugins::stAppPlugins( stImpNonJS *pinterface ) : m_pjs( pinterface ) {
 	std::vector<stStrW> fileNames;
 	stLibUtils::stDir dir;
 
-	m_pjs = CreateImpNonJS();
 	dir.Cd( L"plugins" );
 	dir.Ls( fileNames );
 	
@@ -128,17 +101,5 @@ stAppPlugins::stAppPlugins() : m_pjs( NULL ) {
 stAppPlugins::~stAppPlugins() {
 	for ( un32 i = 0; i < m_dllHs.size(); ++i ) {
 		FreeLibrary( m_dllHs[i] );
-	}
-}
-
-stEventPack::stEventPack() : p_PassInstance( NULL ), pLEFT( NULL ), pRIGHT( NULL ), p_ClassName( NULL ), p_TitleName( NULL ), p_Behavior( NULL ) {
-	for ( un32 i = 0; i < 8; ++i ) {
-		pBTN[i] = NULL;
-	}
-	for ( un32 i = 0; i < 4; ++i ) {
-		pPOV[i] = NULL;
-	}
-	for ( un32 i = 0; i < ST_MAX_STATE; ++i ) {
-		pSTATE[i] = NULL;
 	}
 }

@@ -73,7 +73,7 @@
     <OutDir>$(ProjectDir)..\..\bin\</OutDir>
     <IntDir>$(ProjectDir)..\..\objs\</IntDir>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>C:\dev\Projects\stLib\include\%24ref%24;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib;C:\dev\Projects\stLib\bin\stLib;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\lib;C:\Program Files (x86)\Windows Kits\10\lib\10.0.10240.0\ucrt\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\lib</LibraryPath>
+    <LibraryPath>C:\dev\Projects\stLib\include\%24ref%24;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\lib;C:\dev\Projects\stLib\bin;C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\atlmfc\lib;C:\Program Files (x86)\Windows Kits\10\lib\10.0.10240.0\ucrt\x86;C:\Program Files (x86)\Microsoft SDKs\Windows\v7.1A\lib</LibraryPath>
     <IncludePath>C:\dev\Projects\impnonjs\include\%24ref%24\DX9;C:\dev\Projects\stLib\include;$(IncludePath)</IncludePath>
     <TargetName>INJSx86_d</TargetName>
   </PropertyGroup>
@@ -89,11 +89,11 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>INJSDLLFUNC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>dinput8.lib;stLibx86.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>dinput8.lib;stLibx86_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
