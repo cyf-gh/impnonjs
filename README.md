@@ -1,6 +1,10 @@
 # impnonjs
 
 The Software Implements Your Joystick to play Non-Joystick supported Games
+
+# WARNING !
+stLib 正在重构中！该项目年久失修目前无法正常编译！
+
 ## License
 #### WTFPL
 
